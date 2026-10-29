@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Framivo — скриншоты и запись экрана</title>
+<meta name="description" content="Framivo — лёгкая программа для скриншотов и записи экрана. Работает локально, без облака." />
+<link rel="icon" href="logo.svg" type="image/svg+xml" />
+<style>
+  :root {
+    --blue: #0447f7; --blue-hi: #3d78ff; --red: #ff4a4a;
+    --ink: #060b1a; --line: #22346b; --text: #e8eeff; --muted: #8fa0c4;
+    --ease: cubic-bezier(.2,.8,.2,1);
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--ink); color: var(--text); font: 16px/1.55 "Segoe UI", system-ui, -apple-system, sans-serif; overflow-x: hidden; }
+  .aurora { position: fixed; inset: 0; z-index: -1; overflow: hidden; }
+  .aurora i { position: absolute; width: 60vmax; height: 60vmax; border-radius: 50%; filter: blur(90px); opacity: .5; animation: drift 18s ease-in-out infinite alternate; }
+  .aurora i:nth-child(1) { background: #0447f7; top: -25vmax; left: -15vmax; }
+  .aurora i:nth-child(2) { background: #5b21b6; right: -20vmax; top: 15vmax; animation-delay: -6s; opacity: .35; }
+  .aurora i:nth-child(3) { background: #ff4a4a; bottom: -35vmax; left: 25vw; animation-delay: -11s; opacity: .18; }
+  @keyframes drift { to { transform: translate(6vmax, 5vmax) scale(1.15); } }
+  .wrap { width: min(1080px, 100% - 32px); margin: 0 auto; }
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 22px 0; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 20px; color: #fff; text-decoration: none; }
+  .brand svg { width: 34px; height: auto; }
+  .lang { display: flex; gap: 4px; background: #0b1530aa; border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
+  .lang button { all: unset; cursor: pointer; padding: 5px 12px; border-radius: 999px; font-size: 13px; color: var(--muted); transition: .2s; }
+  .lang button:hover { color: #fff; }
+  .lang button[aria-pressed=true] { background: linear-gradient(135deg, var(--blue-hi), var(--blue)); color: #fff; }
+  .hero { text-align: center; padding: 56px 0 40px; }
+  .hero .logo { width: 128px; margin: 0 auto 22px; display: block; filter: drop-shadow(0 12px 40px #0447f7aa); animation: float 5s ease-in-out infinite; }
+  @keyframes float { 50% { transform: translateY(-8px); } }
+  h1 { font-size: clamp(34px, 6vw, 62px); line-height: 1.08; font-weight: 800; letter-spacing: -1px;
+       background: linear-gradient(120deg, #fff 20%, #8fb0ff 60%, #fff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lead { max-width: 640px; margin: 18px auto 0; color: var(--muted); font-size: 18px; }
+  .cta { margin: 34px 0 10px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 26px; border-radius: 14px; font-weight: 700; font-size: 16px; text-decoration: none; color: #fff;
+         background: linear-gradient(135deg, var(--blue-hi), var(--blue)); border: 1px solid #7ea3ff; box-shadow: 0 10px 34px #0447f799, inset 0 1px 0 #ffffff40;
+         transition: box-shadow .25s; }
+  .btn:hover { box-shadow: 0 16px 44px #0447f7cc, inset 0 1px 0 #ffffff55; }
+  .btn.ghost { background: #0b1530cc; border-color: var(--line); box-shadow: none; }
+  .btn.ghost:hover { border-color: var(--blue-hi); box-shadow: 0 10px 30px #0447f740; }
+  .note { color: var(--muted); font-size: 13px; min-height: 20px; }
+  section { padding: 54px 0 10px; }
+  h2 { font-size: 28px; text-align: center; margin-bottom: 28px; letter-spacing: -.3px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .card { background: linear-gradient(150deg, #0f2260cc, #0b1530dd); border: 1px solid #2a3f86; border-radius: 18px; padding: 22px; transition: border-color .3s, box-shadow .3s; }
+  .card:hover { border-color: var(--blue-hi); box-shadow: 0 0 36px #0447f733; }
+  .card b { display: block; font-size: 17px; margin: 8px 0 6px; }
+  .card p { color: var(--muted); font-size: 14.5px; }
+  .ico { font-size: 26px; }
+  .dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+  .dl .card h3 { font-size: 20px; margin-bottom: 4px; }
+  .dl .card .links { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+  .dl .card a { color: #cfe0ff; text-decoration: none; padding: 9px 14px; border-radius: 10px; background: #0a1330; border: 1px solid #27407f; font-size: 14px; transition: .2s; }
+  .dl .card a:hover { border-color: var(--blue-hi); color: #fff; }
+  .dl .card small { color: var(--muted); display: block; margin-top: 12px; font-size: 12.5px; }
+  .dl .card.me { border-color: var(--blue-hi); box-shadow: 0 0 40px #0447f733; }
+  details { background: #0b1530aa; border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; margin-bottom: 10px; }
+  summary { cursor: pointer; font-weight: 600; }
+  details p, details code { color: var(--muted); font-size: 14.5px; margin-top: 8px; display: block; }
+  code { font-family: Consolas, monospace; color: #9fc0ff; background: #0a1330; padding: 2px 6px; border-radius: 6px; }
+  footer { text-align: center; color: var(--muted); font-size: 13px; padding: 54px 0 40px; }
+  footer a { color: #9fc0ff; }
+  .reveal { opacity: 0; transform: translateY(18px); animation: up .8s var(--ease) forwards; }
+  @keyframes up { to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } .reveal { opacity: 1; transform: none; } }
+</style>
+</head>
+<body>
+<div class="aurora"><i></i><i></i><i></i></div>
+<div class="wrap">
+  <nav>
+    <a class="brand" href="#"><span id="mini"></span>Framivo</a>
+    <div class="lang" role="group" aria-label="Language">
+      <button data-l="ru">RU</button><button data-l="uk">UA</button><button data-l="en">EN</button>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <span id="big"></span>
+    <h1 data-i="title"></h1>
+    <p class="lead reveal" data-i="lead"></p>
+    <div class="cta reveal">
+      <a class="btn" id="main-dl" href="#download"><span data-i="download"></span></a>
+      <a class="btn ghost" href="#download" data-i="all"></a>
+    </div>
+    <p class="note" id="note"></p>
+  </header>
+
+  <section>
+    <h2 data-i="why"></h2>
+    <div class="grid">
+      <div class="card"><span class="ico">▣</span><b data-i="f1t"></b><p data-i="f1d"></p></div>
+      <div class="card"><span class="ico">✎</span><b data-i="f2t"></b><p data-i="f2d"></p></div>
+      <div class="card"><span class="ico">◉</span><b data-i="f3t"></b><p data-i="f3d"></p></div>
+      <div class="card"><span class="ico">⌨</span><b data-i="f4t"></b><p data-i="f4d"></p></div>
+      <div class="card"><span class="ico">🔒</span><b data-i="f5t"></b><p data-i="f5d"></p></div>
+      <div class="card"><span class="ico">🌍</span><b data-i="f6t"></b><p data-i="f6d"></p></div>
+    </div>
+  </section>
+
+  <section id="download">
+    <h2 data-i="dlh"></h2>
+    <div class="dl">
+      <div class="card" data-os="win"><h3>Windows</h3><small data-i="winreq"></small><div class="links" id="l-win"></div><small data-i="winnote"></small></div>
+      <div class="card" data-os="mac"><h3>macOS</h3><small data-i="macreq"></small><div class="links" id="l-mac"></div><small data-i="macnote"></small></div>
+      <div class="card" data-os="linux"><h3>Linux</h3><small data-i="linreq"></small><div class="links" id="l-linux"></div><small data-i="linnote"></small></div>
+    </div>
+  </section>
+
+  <section>
+    <h2 data-i="help"></h2>
+    <details><summary data-i="q1"></summary><p data-i="a1"></p></details>
+    <details><summary data-i="q2"></summary><p data-i="a2"></p><code>xattr -cr /Applications/Framivo.app</code></details>
+    <details><summary data-i="q3"></summary><p data-i="a3"></p></details>
+  </section>
+
+  <footer>Framivo · NN Production · <a href="https://github.com/nazarka614/framivo-releases/releases" data-i="allrel"></a></footer>
+</div>
+
+<script>
+const REPO = "nazarka614/framivo-releases";
+const LOGO = '<svg viewBox="330 150 715 640" aria-hidden="true" fill="#0447f7">'
+  + '<path d="M410 166H780Q792 168 790 182L725 262Q715 272 700 272H475Q450 272 447 300V340Q447 350 440 355L360 407Q346 410 344 395V240Q344 166 410 166Z"/>'
+  + '<path d="M560 364H850Q864 366 860 380L800 458Q790 478 760 478H545Q535 478 525 485L460 530Q452 536 452 550V765Q452 773 440 773H400Q344 773 344 700V505Q344 490 358 482L520 375Q535 364 560 364Z"/>'
+  + '<path d="M848 166H965Q1031 166 1031 240V340Q1031 355 1015 355H968Q951 355 951 340V262Q951 241 930 241H848Q832 241 832 225V182Q832 166 848 166Z"/>'
+  + '<path d="M968 527H1015Q1031 527 1031 545V760Q1031 775 1015 775H848Q832 775 832 758V720Q832 704 848 704H935Q951 704 951 690V545Q951 527 968 527Z"/>'
+  + '<circle cx="800" cy="607" r="76" fill="#ff4a4a"/></svg>';
+document.getElementById("mini").innerHTML = LOGO;
+document.getElementById("big").innerHTML = LOGO;
+document.querySelector("#big svg").setAttribute("class", "logo");
+
+const T = {
+  ru: {
+    title: "Скриншоты и запись экрана — просто и красиво",
+    lead: "Framivo снимает любую область на любом мониторе, даёт сразу поправить снимок и записывает видео с экрана. Всё остаётся на твоём компьютере.",
+    download: "Скачать", all: "Все версии", why: "Что умеет Framivo",
+    f1t: "Область на любом экране", f1d: "Выделяй мышью кусок на любом мониторе или снимай весь экран целиком.",
+    f2t: "Встроенный редактор", f2d: "Стрелки, карандаш, маркер, текст, обрезка, размытие и чёрная заливка для личных данных.",
+    f3t: "Запись видео", f3d: "Экран в MP4 с микрофоном, обрезка начала и конца прямо в программе. Пока только в Windows.",
+    f4t: "Горячие клавиши", f4d: "Снимок одним сочетанием, программа живёт в трее и не мешает.",
+    f5t: "Без облака", f5d: "Ничего не загружается в интернет. Снимки и записи только у тебя.",
+    f6t: "Три языка", f6d: "Русский, украинский и английский переключаются в настройках.",
+    dlh: "Скачать Framivo", winreq: "Windows 10 и 11", macreq: "macOS 11 и новее", linreq: "Ubuntu, Debian, Fedora и другие",
+    winnote: "Установщик не требует прав администратора.", macnote: "Видео пока недоступно, снимки работают.", linnote: "Видео пока недоступно, снимки работают.",
+    help: "Если система ругается", q1: "Windows: «Система Windows защитила ваш компьютер»", a1: "Это окно SmartScreen для программ без платной подписи. Нажми «Подробнее», затем «Выполнить в любом случае».",
+    q2: "macOS: «Приложение повреждено» или «от неизвестного разработчика»", a2: "Перетащи Framivo в «Программы». Если macOS не открывает его, нажми правой кнопкой → «Открыть». Если пишет «повреждено», выполни в Терминале:",
+    q3: "Linux: как запустить AppImage", a3: "Сделай файл исполняемым (правый клик → «Свойства» → «Разрешить выполнение») и запусти двойным щелчком. Для .deb: sudo apt install ./файл.deb",
+    allrel: "Все релизы", ver: "Версия", none: "Релиз ещё не опубликован — загляни позже.",
+    arm: "Mac с чипом Apple (M1 и новее)", intel: "Mac с процессором Intel", exe: "Установщик (.exe)", appimg: "AppImage (любой дистрибутив)", deb: "Пакет .deb (Ubuntu / Debian)"
+  },
+  uk: {
+    title: "Скриншоти та запис екрана — просто і гарно",
+    lead: "Framivo знімає будь-яку область на будь-якому моніторі, дає одразу поправити знімок і записує відео з екрана. Усе лишається на твоєму комп’ютері.",
+    download: "Завантажити", all: "Усі версії", why: "Що вміє Framivo",
+    f1t: "Область на будь-якому екрані", f1d: "Виділяй мишею шматок на будь-якому моніторі або знімай весь екран.",
+    f2t: "Вбудований редактор", f2d: "Стрілки, олівець, маркер, текст, обрізка, розмиття та чорна заливка для особистих даних.",
+    f3t: "Запис відео", f3d: "Екран у MP4 з мікрофоном, обрізка початку й кінця просто в програмі. Поки що лише у Windows.",
+    f4t: "Гарячі клавіші", f4d: "Знімок одним поєднанням, програма живе в треї й не заважає.",
+    f5t: "Без хмари", f5d: "Нічого не завантажується в інтернет. Знімки й записи лише в тебе.",
+    f6t: "Три мови", f6d: "Російська, українська та англійська перемикаються в налаштуваннях.",
+    dlh: "Завантажити Framivo", winreq: "Windows 10 і 11", macreq: "macOS 11 і новіше", linreq: "Ubuntu, Debian, Fedora та інші",
+    winnote: "Інсталятор не потребує прав адміністратора.", macnote: "Відео поки недоступне, знімки працюють.", linnote: "Відео поки недоступне, знімки працюють.",
+    help: "Якщо система лається", q1: "Windows: «Система Windows захистила ваш комп’ютер»", a1: "Це вікно SmartScreen для програм без платного підпису. Натисни «Докладніше», потім «Усе одно виконати».",
+    q2: "macOS: «Програму пошкоджено» або «від невідомого розробника»", a2: "Перетягни Framivo в «Програми». Якщо macOS не відкриває, натисни правою кнопкою → «Відкрити». Якщо пише «пошкоджено», виконай у Терміналі:",
+    q3: "Linux: як запустити AppImage", a3: "Зроби файл виконуваним (правий клік → «Властивості» → «Дозволити виконання») і запусти подвійним клацанням. Для .deb: sudo apt install ./файл.deb",
+    allrel: "Усі релізи", ver: "Версія", none: "Реліз ще не опубліковано — зазирни пізніше.",
+    arm: "Mac із чипом Apple (M1 і новіше)", intel: "Mac із процесором Intel", exe: "Інсталятор (.exe)", appimg: "AppImage (будь-який дистрибутив)", deb: "Пакет .deb (Ubuntu / Debian)"
+  },
+  en: {
+    title: "Screenshots and screen recording — simple and beautiful",
+    lead: "Framivo captures any area on any monitor, lets you fix the shot right away, and records your screen to video. Everything stays on your computer.",
+    download: "Download", all: "All versions", why: "What Framivo does",
+    f1t: "Region on any screen", f1d: "Drag a selection on any monitor, or capture a whole screen.",
+    f2t: "Built-in editor", f2d: "Arrows, pen, marker, text, crop, blur and a black cover for private data.",
+    f3t: "Video recording", f3d: "Screen to MP4 with a microphone, trim the start and end in the app. Windows only for now.",
+    f4t: "Hotkeys", f4d: "One shortcut for a shot; the app lives in the tray and stays out of the way.",
+    f5t: "No cloud", f5d: "Nothing is uploaded. Your shots and recordings stay with you.",
+    f6t: "Three languages", f6d: "Russian, Ukrainian and English, switchable in settings.",
+    dlh: "Download Framivo", winreq: "Windows 10 and 11", macreq: "macOS 11 and newer", linreq: "Ubuntu, Debian, Fedora and others",
+    winnote: "The installer needs no admin rights.", macnote: "Video is not available yet; screenshots work.", linnote: "Video is not available yet; screenshots work.",
+    help: "If your system complains", q1: "Windows: “Windows protected your PC”", a1: "That is SmartScreen for apps without a paid signature. Click “More info”, then “Run anyway”.",
+    q2: "macOS: “App is damaged” or “from an unidentified developer”", a2: "Drag Framivo to Applications. If macOS will not open it, right-click → Open. If it says “damaged”, run in Terminal:",
+    q3: "Linux: how to run the AppImage", a3: "Make the file executable (right-click → Properties → Allow executing) and double-click it. For .deb: sudo apt install ./file.deb",
+    allrel: "All releases", ver: "Version", none: "No release has been published yet — check back soon.",
+    arm: "Mac with Apple silicon (M1 and newer)", intel: "Mac with an Intel processor", exe: "Installer (.exe)", appimg: "AppImage (any distro)", deb: ".deb package (Ubuntu / Debian)"
+  }
+};
+
+const ua = navigator.userAgent;
+const OS = /Windows/i.test(ua) ? "win" : /Mac/i.test(ua) ? "mac" : /Linux|X11/i.test(ua) && !/Android/i.test(ua) ? "linux" : "win";
+let lang = "ru";
+try { lang = localStorage.getItem("lang") || (navigator.language || "ru").slice(0, 2); } catch (e) {}
+if (!T[lang]) lang = lang === "be" || lang === "kk" ? "ru" : "en";
+let release = null;
+
+function pick(re) { return release && release.assets ? release.assets.find((a) => re.test(a.name)) : undefined; }
+function linkHtml(asset, label) { return asset ? `<a href="${asset.browser_download_url}">${label} · ${(asset.size / 1048576).toFixed(1)} MB</a>` : ""; }
+
+function render() {
+  const t = T[lang];
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-i]").forEach((e) => { e.textContent = t[e.dataset.i]; });
+  document.querySelectorAll(".lang button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.l === lang));
+  const sets = {
+    win: [[/\.exe$/i, t.exe]],
+    mac: [[/aarch64\.dmg$/i, t.arm], [/(x64|x86_64)\.dmg$/i, t.intel]],
+    linux: [[/\.AppImage$/i, t.appimg], [/\.deb$/i, t.deb]]
+  };
+  for (const os of ["win", "mac", "linux"]) {
+    const html = sets[os].map(([re, label]) => linkHtml(pick(re), label)).join("");
+    document.getElementById("l-" + os).innerHTML = html || `<small>${t.none}</small>`;
+  }
+  document.querySelector(`[data-os=${OS}]`).classList.add("me");
+  const first = pick(OS === "win" ? /\.exe$/i : OS === "mac" ? /aarch64\.dmg$/i : /\.AppImage$/i);
+  document.getElementById("main-dl").href = first ? first.browser_download_url : "#download";
+  document.getElementById("note").textContent = release ? `${t.ver} ${release.tag_name.replace(/^v/, "")}` : "";
+}
+
+document.querySelectorAll(".lang button").forEach((b) => b.addEventListener("click", () => {
+  lang = b.dataset.l;
+  try { localStorage.setItem("lang", lang); } catch (e) {}
+  render();
+}));
+render();
+fetch(`https://api.github.com/repos/${REPO}/releases/latest`).then((r) => (r.ok ? r.json() : null)).then((j) => { release = j; render(); }).catch(() => {});
+</script>
+</body>
+</html>
