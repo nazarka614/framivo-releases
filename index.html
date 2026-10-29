@@ -117,7 +117,7 @@
     </div>
     <p class="note" id="note"></p>
     <div class="showcase reveal">
-      <div class="win" id="win"><img src="img/app-home.png" alt="Framivo" width="1092" height="772" /></div>
+      <div class="win" id="win"><img id="shot" src="img/app-home-ru.png" alt="Framivo" width="1092" height="772" /></div>
       <span class="chip c1">Ctrl + Shift + S</span>
       <span class="chip c2" data-i="chip2"></span>
       <span class="chip c3" data-i="chip3"></span>
@@ -143,7 +143,7 @@
           <g class="blurbox"><rect x="250" y="190" width="206" height="46" rx="8" fill="#6f86c8" opacity=".85"/><text x="353" y="218" fill="#fff" font-size="11" text-anchor="middle" opacity=".7">▒▒▒▒▒▒▒▒▒▒</text></g>
           <path class="arrow" d="M70 250 C 140 210, 190 150, 262 118" fill="none" stroke="#ff4a4a" stroke-width="5" stroke-linecap="round"/>
           <path class="arrow-h" d="M262 118 L240 122 M262 118 L254 138" fill="none" stroke="#ff4a4a" stroke-width="5" stroke-linecap="round"/>
-          <g class="note-t"><rect x="274" y="94" width="86" height="26" rx="6" fill="#ff4a4a"/><text x="317" y="112" fill="#fff" font-size="13" font-weight="700" text-anchor="middle">Look here</text></g>
+          <g class="note-t"><rect x="274" y="94" width="86" height="26" rx="6" fill="#ff4a4a"/><text x="317" y="112" fill="#fff" font-size="13" font-weight="700" text-anchor="middle" data-i="demonote"></text></g>
         </svg>
       </div>
     </div>
@@ -188,7 +188,7 @@ const T = {
     title: "Скриншоты и запись экрана",
     lead: "Снимай область или весь экран, правь снимок и записывай видео. Всё остаётся на твоём компьютере.",
     download: "Скачать", all: "Все версии", why: "Что умеет Framivo",
-    chip2: "Размытие и стрелки", chip3: "● Запись видео",
+    demonote: "Смотри сюда", chip2: "Размытие и стрелки", chip3: "● Запись видео",
     demot: "Поправь снимок сразу", demod: "Нарисуй стрелку, подпиши, размой лишнее и скопируй. Всё в одном окне, без других программ.",
     f1t: "Область на любом экране", f1d: "Выделяй мышью кусок на любом мониторе или снимай весь экран целиком.",
     f2t: "Встроенный редактор", f2d: "Стрелки, карандаш, маркер, текст, обрезка, размытие и чёрная заливка для личных данных.",
@@ -207,7 +207,7 @@ const T = {
     title: "Скриншоти та запис екрана",
     lead: "Знімай область або весь екран, правь знімок і записуй відео. Усе лишається на твоєму комп’ютері.",
     download: "Завантажити", all: "Усі версії", why: "Що вміє Framivo",
-    chip2: "Розмиття та стрілки", chip3: "● Запис відео",
+    demonote: "Дивись сюди", chip2: "Розмиття та стрілки", chip3: "● Запис відео",
     demot: "Поправ знімок одразу", demod: "Намалюй стрілку, підпиши, розмий зайве й скопіюй. Усе в одному вікні, без інших програм.",
     f1t: "Область на будь-якому екрані", f1d: "Виділяй мишею шматок на будь-якому моніторі або знімай весь екран.",
     f2t: "Вбудований редактор", f2d: "Стрілки, олівець, маркер, текст, обрізка, розмиття та чорна заливка для особистих даних.",
@@ -226,7 +226,7 @@ const T = {
     title: "Screenshots and screen recording",
     lead: "Capture an area or the whole screen, edit the shot and record video. Everything stays on your computer.",
     download: "Download", all: "All versions", why: "What Framivo does",
-    chip2: "Blur and arrows", chip3: "● Video recording",
+    demonote: "Look here", chip2: "Blur and arrows", chip3: "● Video recording",
     demot: "Fix the shot right away", demod: "Draw an arrow, add a label, blur what you need to hide and copy. All in one window.",
     f1t: "Region on any screen", f1d: "Drag a selection on any monitor, or capture a whole screen.",
     f2t: "Built-in editor", f2d: "Arrows, pen, marker, text, crop, blur and a black cover for private data.",
@@ -256,6 +256,7 @@ function linkHtml(asset, label) { return asset ? `<a href="${asset.browser_downl
 function render() {
   const t = T[lang];
   document.documentElement.lang = lang;
+  document.getElementById("shot").src = `img/app-home-${lang}.png`;
   document.querySelectorAll("[data-i]").forEach((e) => { e.textContent = t[e.dataset.i]; });
   document.querySelectorAll(".lang button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.l === lang));
   const sets = {
