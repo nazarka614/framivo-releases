@@ -29,8 +29,8 @@
   .lang button { all: unset; cursor: pointer; padding: 5px 12px; border-radius: 999px; font-size: 13px; color: var(--muted); transition: .2s; }
   .lang button:hover { color: #fff; }
   .lang button[aria-pressed=true] { background: linear-gradient(135deg, var(--blue-hi), var(--blue)); color: #fff; }
-  .hero { text-align: center; padding: 56px 0 40px; }
-  .hero .logo { width: 128px; margin: 0 auto 22px; display: block; filter: drop-shadow(0 12px 40px #0447f7aa); animation: float 5s ease-in-out infinite; }
+  .hero { text-align: center; padding: 28px 0 40px; }
+  .hero .logo { width: 84px; margin: 0 auto 16px; display: block; filter: drop-shadow(0 12px 40px #0447f7aa); animation: float 5s ease-in-out infinite; }
   @keyframes float { 50% { transform: translateY(-8px); } }
   h1 { font-size: clamp(34px, 6vw, 62px); line-height: 1.08; font-weight: 800; letter-spacing: -1px;
        background: linear-gradient(120deg, #fff 20%, #8fb0ff 60%, #fff); -webkit-background-clip: text; background-clip: text; color: transparent; }
@@ -67,6 +67,35 @@
   .reveal { opacity: 0; transform: translateY(18px); animation: up .8s var(--ease) forwards; }
   @keyframes up { to { opacity: 1; transform: none; } }
   @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } .reveal { opacity: 1; transform: none; } }
+
+  .showcase { perspective: 1400px; margin: 46px auto 0; max-width: 940px; position: relative; }
+  .win { border-radius: 16px; overflow: hidden; border: 1px solid #3a56a8; background: #0b1224; transform-style: preserve-3d; transition: transform .25s var(--ease), box-shadow .25s;
+         box-shadow: 0 40px 90px #0447f755, 0 0 0 1px #0b1224; will-change: transform; }
+  .win img { display: block; width: 100%; height: auto; }
+  .chip { position: absolute; padding: 8px 14px; border-radius: 999px; font-size: 13px; font-weight: 600; background: #0f2260ee; border: 1px solid #4a73e0; color: #dfe8ff; box-shadow: 0 10px 30px #0006; animation: bob 4s ease-in-out infinite; }
+  .chip.c1 { top: 12%; left: -3%; } .chip.c2 { bottom: 16%; right: -3%; animation-delay: -2s; } .chip.c3 { top: 46%; right: -4%; animation-delay: -1s; background: #3a1230ee; border-color: #ff4a4a; }
+  @keyframes bob { 50% { transform: translateY(-8px); } }
+  .demo { display: grid; grid-template-columns: 1fr 1.25fr; gap: 28px; align-items: center; }
+  .demo h2 { text-align: left; margin-bottom: 12px; }
+  .demo p { color: var(--muted); }
+  .ed { border: 1px solid #2a3f86; border-radius: 16px; overflow: hidden; background: #0a1330; box-shadow: 0 30px 70px #0447f733; }
+  .ed .bar { display: flex; gap: 8px; padding: 10px 12px; background: #0f1b44; border-bottom: 1px solid #22346b; }
+  .ed .bar i { width: 30px; height: 26px; border-radius: 8px; background: #16265c; border: 1px solid #2a3f86; animation: tool 9s infinite; }
+  .ed .bar i:nth-child(1) { animation-delay: 0s; } .ed .bar i:nth-child(2) { animation-delay: 3s; } .ed .bar i:nth-child(3) { animation-delay: 6s; }
+  @keyframes tool { 0%, 28%, 100% { background: #16265c; } 4%, 24% { background: var(--blue); border-color: #7ea3ff; } }
+  .ed svg { display: block; width: 100%; height: auto; }
+  .arrow { stroke-dasharray: 300; stroke-dashoffset: 300; animation: draw 9s infinite; }
+  .arrow-h { opacity: 0; animation: show1 9s infinite; }
+  .blurbox { opacity: 0; animation: show2 9s infinite; transform-origin: center; }
+  .note-t { opacity: 0; animation: show3 9s infinite; }
+  @keyframes draw { 0% { stroke-dashoffset: 300; } 12%, 90% { stroke-dashoffset: 0; } 97%, 100% { stroke-dashoffset: 300; } }
+  @keyframes show1 { 0%, 11% { opacity: 0; } 13%, 90% { opacity: 1; } 97%, 100% { opacity: 0; } }
+  @keyframes show2 { 0%, 33% { opacity: 0; } 40%, 90% { opacity: 1; } 97%, 100% { opacity: 0; } }
+  @keyframes show3 { 0%, 63% { opacity: 0; } 70%, 90% { opacity: 1; } 97%, 100% { opacity: 0; } }
+  .reveal-s { opacity: 0; transform: translateY(26px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+  .reveal-s.in { opacity: 1; transform: none; }
+  @media (max-width: 760px) { .demo { grid-template-columns: 1fr; } .demo h2 { text-align: center; } .chip { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .reveal-s { opacity: 1; transform: none; } .arrow { stroke-dashoffset: 0; } .arrow-h, .blurbox, .note-t { opacity: 1; } }
 </style>
 </head>
 <body>
@@ -87,9 +116,40 @@
       <a class="btn" id="main-dl" href="#download"><span data-i="download"></span></a>
     </div>
     <p class="note" id="note"></p>
+    <div class="showcase reveal">
+      <div class="win" id="win"><img src="img/app-home.png" alt="Framivo" width="1092" height="772" /></div>
+      <span class="chip c1">Ctrl + Shift + S</span>
+      <span class="chip c2" data-i="chip2"></span>
+      <span class="chip c3" data-i="chip3"></span>
+    </div>
   </header>
 
-  <section>
+  <section class="reveal-s">
+    <div class="demo">
+      <div><h2 data-i="demot"></h2><p data-i="demod"></p></div>
+      <div class="ed">
+        <div class="bar"><i></i><i></i><i></i><i style="margin-left:auto;width:60px;background:var(--blue)"></i></div>
+        <svg viewBox="0 0 480 300" aria-hidden="true">
+          <rect width="480" height="300" fill="#10193a"/>
+          <rect x="24" y="24" width="432" height="34" rx="8" fill="#1a2858"/>
+          <rect x="24" y="76" width="200" height="200" rx="10" fill="#16265c"/>
+          <rect x="240" y="76" width="216" height="92" rx="10" fill="#16265c"/>
+          <rect x="240" y="184" width="216" height="92" rx="10" fill="#1a2858"/>
+          <rect x="40" y="96" width="120" height="10" rx="5" fill="#3d78ff"/>
+          <rect x="40" y="120" width="160" height="8" rx="4" fill="#2a3f86"/>
+          <rect x="40" y="140" width="140" height="8" rx="4" fill="#2a3f86"/>
+          <rect x="256" y="196" width="150" height="10" rx="5" fill="#8fa0c4"/>
+          <rect x="256" y="218" width="120" height="8" rx="4" fill="#8fa0c4"/>
+          <g class="blurbox"><rect x="250" y="190" width="206" height="46" rx="8" fill="#6f86c8" opacity=".85"/><text x="353" y="218" fill="#fff" font-size="11" text-anchor="middle" opacity=".7">▒▒▒▒▒▒▒▒▒▒</text></g>
+          <path class="arrow" d="M70 250 C 140 210, 190 150, 262 118" fill="none" stroke="#ff4a4a" stroke-width="5" stroke-linecap="round"/>
+          <path class="arrow-h" d="M262 118 L240 122 M262 118 L254 138" fill="none" stroke="#ff4a4a" stroke-width="5" stroke-linecap="round"/>
+          <g class="note-t"><rect x="274" y="94" width="86" height="26" rx="6" fill="#ff4a4a"/><text x="317" y="112" fill="#fff" font-size="13" font-weight="700" text-anchor="middle">Look here</text></g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal-s">
     <h2 data-i="why"></h2>
     <div class="grid">
       <div class="card"><span class="ico">▣</span><b data-i="f1t"></b><p data-i="f1d"></p></div>
@@ -99,7 +159,7 @@
       </div>
   </section>
 
-  <section id="download">
+  <section id="download" class="reveal-s">
     <h2 data-i="dlh"></h2>
     <div class="dl">
       <div class="card" data-os="win"><h3>Windows</h3><small data-i="winreq"></small><div class="links" id="l-win"></div><small data-i="winnote"></small></div>
@@ -128,6 +188,8 @@ const T = {
     title: "Скриншоты и запись экрана",
     lead: "Снимай область или весь экран, правь снимок и записывай видео. Всё остаётся на твоём компьютере.",
     download: "Скачать", all: "Все версии", why: "Что умеет Framivo",
+    chip2: "Размытие и стрелки", chip3: "● Запись видео",
+    demot: "Поправь снимок сразу", demod: "Нарисуй стрелку, подпиши, размой лишнее и скопируй. Всё в одном окне, без других программ.",
     f1t: "Область на любом экране", f1d: "Выделяй мышью кусок на любом мониторе или снимай весь экран целиком.",
     f2t: "Встроенный редактор", f2d: "Стрелки, карандаш, маркер, текст, обрезка, размытие и чёрная заливка для личных данных.",
     f3t: "Запись видео", f3d: "Экран в MP4 с микрофоном, обрезка начала и конца прямо в программе. Пока только в Windows.",
@@ -145,6 +207,8 @@ const T = {
     title: "Скриншоти та запис екрана",
     lead: "Знімай область або весь екран, правь знімок і записуй відео. Усе лишається на твоєму комп’ютері.",
     download: "Завантажити", all: "Усі версії", why: "Що вміє Framivo",
+    chip2: "Розмиття та стрілки", chip3: "● Запис відео",
+    demot: "Поправ знімок одразу", demod: "Намалюй стрілку, підпиши, розмий зайве й скопіюй. Усе в одному вікні, без інших програм.",
     f1t: "Область на будь-якому екрані", f1d: "Виділяй мишею шматок на будь-якому моніторі або знімай весь екран.",
     f2t: "Вбудований редактор", f2d: "Стрілки, олівець, маркер, текст, обрізка, розмиття та чорна заливка для особистих даних.",
     f3t: "Запис відео", f3d: "Екран у MP4 з мікрофоном, обрізка початку й кінця просто в програмі. Поки що лише у Windows.",
@@ -162,6 +226,8 @@ const T = {
     title: "Screenshots and screen recording",
     lead: "Capture an area or the whole screen, edit the shot and record video. Everything stays on your computer.",
     download: "Download", all: "All versions", why: "What Framivo does",
+    chip2: "Blur and arrows", chip3: "● Video recording",
+    demot: "Fix the shot right away", demod: "Draw an arrow, add a label, blur what you need to hide and copy. All in one window.",
     f1t: "Region on any screen", f1d: "Drag a selection on any monitor, or capture a whole screen.",
     f2t: "Built-in editor", f2d: "Arrows, pen, marker, text, crop, blur and a black cover for private data.",
     f3t: "Video recording", f3d: "Screen to MP4 with a microphone, trim the start and end in the app. Windows only for now.",
@@ -212,6 +278,15 @@ document.querySelectorAll(".lang button").forEach((b) => b.addEventListener("cli
   try { localStorage.setItem("lang", lang); } catch (e) {}
   render();
 }));
+const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: 0.12 });
+document.querySelectorAll(".reveal-s").forEach((e) => io.observe(e));
+const win = document.getElementById("win");
+if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  window.addEventListener("pointermove", (e) => {
+    const x = e.clientX / innerWidth - 0.5, y = e.clientY / innerHeight - 0.5;
+    win.style.transform = `rotateY(${x * 7}deg) rotateX(${-y * 5}deg)`;
+  });
+}
 render();
 fetch(`https://api.github.com/repos/${REPO}/releases/latest`).then((r) => (r.ok ? r.json() : null)).then((j) => { release = j; render(); }).catch(() => {});
 </script>
